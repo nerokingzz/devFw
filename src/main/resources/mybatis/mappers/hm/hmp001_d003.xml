@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="hm.hmp001_d003">
+	<resultMap id="hmp001_d003Result01" type="hmp001_d003VO">
+		<result property="prod_id" column="prod_id"  />
+		<result property="vend_id" column="vend_id" />
+		<result property="prod_name" column="prod_name" />
+		<result property="prod_price" column="prod_price" />
+		<result property="prod_desc" column="prod_desc" />
+	</resultMap>
+
+	<select id="searchList" resultMap="hmp001_d003Result01" parameterType="java.util.Map"> 
+      <![CDATA[
+         select prod_id, prod_name, prod_price, prod_desc, vend_name
+         from   products p, vendors v
+      ]]>
+      <where>
+            p.vend_id = v.vend_id
+         <if test=" p_prod_id != ''  and  p_prod_id != null">
+            and trim(p.prod_id) like '%'||#{p_prod_id}||'%'
+         </if>
+      </where>
+   </select>
+
+	<select id="searchMod" resultMap="hmp001_d003Result01" parameterType="java.util.Map"> 
+      <![CDATA[
+         select prod_id, vend_id, prod_name, prod_price, prod_desc
+         from   products
+      ]]>
+		<where>
+				
+			<if test=" p_prod_id != ''  and  p_prod_id != null">
+				prod_id = #{p_prod_id}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateMember" parameterType="java.util.Map">
+		update products
+		set  vend_id = #{vend_id}
+		   , prod_name = #{prod_name}
+		   , prod_price = #{prod_price}
+		   , prod_desc = #{prod_desc}
+		where prod_id = #{prod_id}
+	</update>
+	
+	<insert id="insertMember" parameterType="java.util.Map">
+		insert into products(prod_id, vend_id, prod_name, prod_price, prod_desc) values(#{prod_id}, #{vend_id}, #{prod_name}, #{prod_price}, #{prod_desc})
+	</insert>	
+
+</mapper>
